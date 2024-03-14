@@ -1,5 +1,7 @@
 # Data Engineer Miniproject
+
 ## 👋 Introduction
+
 Welcome to the coding assignment page for the Data Engineering role at TfH for the Worldcoin project!
 
 This coding assigment consists of a few tasks revolving around data loading, analysis and processing.
@@ -11,10 +13,13 @@ Review of your submission will also focus on the quality of code and documentati
 You are free to make reasonable assumptions when working on the project to move forward and overcome any missing pieces of information.
 
 ## 🧑‍💻 Task description
+
 This coding assignment presents you with some example data that is relevant for the task of face detection. You will not be provided with any actual image data, instead you will work only on the image metadata and bounding box information as it would be stored in a MongoDB instance collecting all information for this hypothetical face detection system.
 
 ## 🖼️ Primer on bounding boxes
+
 ### Specification
+
 The core data structure in this assignment is a bounding box for user's faces in images. A bounding box is simply a rectangle that is drawn around a person's face in an image.
 
 The specification of a bounding box in our case can come in two variants that fully and uniquely specify the rectangle:
@@ -25,6 +30,7 @@ The specification of a bounding box in our case can come in two variants that fu
 You will find both these variants in the presented data.
 
 ### Coordinates
+
 The coordinates used to specify the bounding boxes is present in *fractional coordinates* in the presented data.
 
 Fractional coordinates are declaring a coordinate point in the range `[0, 1]` with respect to the image dimensions. E.g. a coordinate of `[0.5, 0.5]` would be the center of any image, irrespective of it's size or aspect ratio. The top left corner of an image is `[0.0, 0.0]`, the bottom right corner is `[1.0, 1.0]`.
@@ -32,6 +38,7 @@ Fractional coordinates are declaring a coordinate point in the range `[0, 1]` wi
 The `x` coordinate in our system specifies the horizontal position, while y specifies the vertical position.
 
 ## 💽 Data
+
 The data you will be working with is simulating a small amount of data as it might show up in a system for face detection. This specific system is designed to process incoming image data with machine-learning model for face detection, and pass results on to human audit & annotation teams. The end-goal is a dataset of face bounding boxes that can be used for training a face detection model.
 
 Consider this high-level diagram to give you a mental model for the data flow and relationships between database collections that will be introduced:
@@ -154,6 +161,7 @@ task_version specifies which version of the annotation task generated this docum
 timestamp is the unix timestamp for when the annotation was received.
 
 ## ✏️ Tasks
+
 For this assignment you will be asked to perform the following tasks:
 
 1. Setup:
@@ -227,6 +235,7 @@ So in a case where an image has the following bounding box sources:
 - [database_documents](../coding_submission_documents)
 
 ## Submission
+
 For all the tasks we recommend creating a (private) Github repository to easily share your results. Please push all the necessary content (files, images, slides, etc) and code to that repository and invite the following users:
 
 - tbszlg
