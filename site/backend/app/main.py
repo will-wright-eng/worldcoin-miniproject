@@ -1,42 +1,24 @@
-import os
 import json
-from pathlib import Path
 
-from fastapi import FastAPI, Request, HTTPException
-from pymongo import MongoClient
+from app.db import crud, database
+from fastapi import Depends, FastAPI, Request, HTTPException
 from app.core import log, config
+from app.routers.info import info_router
+from app.routers.cruds import crud_router
 
 logger = log.get_logger(__name__)
 app = FastAPI(title=config.PROJECT_NAME, docs_url="/api/docs", openapi_url="/api")
 
-# MongoDB URI and client setup
-# mongodb_uri = 'mongodb_uri'  # Replace with your actual MongoDB URI
-mongodb_uri = os.environ.get("MONGODB_URI")
-client = MongoClient(mongodb_uri)
-db = client["machine_learning_pipeline"]
 
-collections = {
-    "bbox_annotation": "bbox.annotation.json",
-    "bbox_audit": "bbox.audit.json",
-    "bbox_model": "bbox.model.json",
-    "image_metadata": "metadata.json",
-}
-
-# data_directory = Path(__file__).parent / 'data'  # Adjust this if your script is located elsewhere
-data_directory = Path(__file__).parent / "data"
-
-
-# Function to check if the collection already exists and has data
-def check_existing_data(collection_name):
+def check_existing_data(db, collection_name):
     collection = db[collection_name]
     if collection.estimated_document_count() > 0:
         return True
     return False
 
 
-# Function to load JSON data from a file
 def load_json_data(filename):
-    with open(data_directory / filename, "r") as file:
+    with open(config.data_directory / filename, "r") as file:
         return json.load(file)
 
 
@@ -48,45 +30,60 @@ async def log_requests(request: Request, call_next):
     return response
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "world"}
+@app.on_event("shutdown")
+async def shutdown_event():
+    db = database.get_db()
+    db.client.close()
 
 
-# @app.on_event("startup")
+@app.on_event("startup")
 async def startup_event():
-    for collection_name, file_name in collections.items():
-        if not check_existing_data(collection_name):
+    db = database.get_db()
+    for collection_name, file_name in crud.collections.items():
+        if not check_existing_data(db, collection_name):
             try:
                 data = load_json_data(file_name)
                 db[collection_name].insert_many(data)
-                print(f"Inserted data into {collection_name} collection.")
+                logger.info(f"Inserted data into {collection_name} collection.")
             except FileNotFoundError:
-                print(f"File {file_name} not found. Skipping {collection_name} collection.")
+                logger.info(f"File {file_name} not found. Skipping {collection_name} collection.")
             except Exception as e:
-                print(f"An error occurred: {e}")
+                logger.info(f"An error occurred: {e}")
+
+
+@app.get("/")
+async def root(db=Depends(database.get_db)):
+    # Use the db instance directly.
+    return {"message": "Hello World"}
 
 
 @app.get("/populate_database")
-async def populate_database():
-    for collection_name, file_name in collections.items():
-        if not check_existing_data(collection_name):
+async def populate_database(db=Depends(database.get_db)):
+    for collection_name, file_name in crud.collections.items():
+        if not check_existing_data(db, collection_name):
             try:
                 data = load_json_data(file_name)
                 db[collection_name].insert_many(data)
-                return {collection_name: "Data inserted successfully"}
+
+                logger.info(f"Inserted data into {collection_name} collection.")
             except FileNotFoundError:
-                raise HTTPException(status_code=404, detail=f"File {file_name} not found.")
+                error_str = f"File {file_name} not found."
+                logger.error(error_str)
+                raise HTTPException(status_code=404, detail=error_str)
             except Exception as e:
+                logger.error(str(e))
                 raise HTTPException(status_code=500, detail=str(e))
-    return {"detail": "Data already exists in the database"}
+    return {"message": "Data inserted successfully", "collections": db.list_collection_names()}
 
 
-@app.get("/data_details")
-def get_data_details():
-    # return the current working directory and files in it
-    return {
-        "current working directory": os.getcwd(),
-        "data files": os.listdir("app"),
-        "data directory files": os.listdir(data_directory),
-    }
+# Routers
+app.include_router(
+    crud_router,
+    prefix="/v1",
+    tags=["crud"],
+)
+app.include_router(
+    info_router,
+    prefix="/v1",
+    tags=["info"],
+)

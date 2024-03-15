@@ -1,3 +1,5 @@
+# notes
+
 ## setup
 
 - download data
@@ -7,7 +9,7 @@
 - objective: a few tasks revolving around data loading, analysis and processing
 - motivation: tbd
 - stakeholder: discussion panel
-- boundry conditions:
+- boundary conditions:
   - submission should be able to stand on its own for our reviewing process
   - submit all details you deem necessary to understand your approach, and all code (incl. instructions) to run your coding solution
   - focus on the quality of code and documentation next to inspection of approach and outcomes
@@ -31,8 +33,8 @@
 ### data monitoring (ie current state reporting)
 
 - fraction of all available images that have been processed by bbox model (len(bbox.model) over len(metadata))
-- fraction of images where model predictions have been audited as *correct* by human (len(bbox.model) over bbox.audit/bbox_correct == True))
-- fraction of images where *incorrect* model predictions have been corrected by human annotation (len(bbox.model) over bbox.annotation/bbox_correct == True))
+- fraction of images where model predictions have been audited as *correct* by human (len(bbox.model) over bbox.audit/bbox_correct == True)
+- fraction of images where *incorrect* model predictions have been corrected by human annotation (len(bbox.model) over bbox.annotation/bbox_correct == True)
 
 **implement a function that returns the requested information human-readable**
 
@@ -42,7 +44,7 @@
 
 ### model failure inspection
 
-- case: bbox model failing to predict bbox accuratly
+- case: bbox model failing to predict bbox accurately
 - query: given image_id, get bbox model predictions -- display alongside human annotations
 
 **implement UI that gives overlay**
