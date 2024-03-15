@@ -50,7 +50,7 @@ repos:
   rev: 5.13.2
   hooks:
   - id: isort
-    args: ['--order-by-type', '--length-sort', "--profile", "black", "--filter-files"]
+    args: ["--order-by-type", "--length-sort", "--profile", "black", "--settings-file", "pyproject.toml", "--filter-files"]
     name: isort (python)
   - id: isort
     name: isort (cython)

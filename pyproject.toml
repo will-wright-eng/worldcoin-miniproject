@@ -1,0 +1,5 @@
+[tool.isort]
+profile = "black"
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "APP", "FIRSTPARTY", "LOCALFOLDER"]
+known_app = ["app"]
+# src_paths = ["src", "tests"]
