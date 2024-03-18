@@ -1,5 +1,6 @@
-from app.db import crud, schema, database
 from fastapi import Depends, APIRouter, HTTPException
+
+from app.db import crud, schema, database
 from app.core import log
 
 crud_router = r = APIRouter(

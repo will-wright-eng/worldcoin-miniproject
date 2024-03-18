@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+
 from app.core import config
 
 client = MongoClient(config.mongodb_uri)

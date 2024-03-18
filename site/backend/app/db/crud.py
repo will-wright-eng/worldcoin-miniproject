@@ -1,11 +1,12 @@
 from typing import Dict, List
 
-from app.db import database
 from fastapi import HTTPException
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from pymongo.errors import CollectionInvalid
 from pymongo.collection import Collection
+
+from app.db import database
 
 collections = {
     "bbox_annotation": "bbox.annotation.json",

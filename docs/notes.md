@@ -61,3 +61,75 @@
 - inclusion criteria
   - Prioritize human bounding box annotations over model predictions.
   - Prioritize most recent bounding boxes.
+
+## mongodb analytics
+
+- [Introduction to the MongoDB Aggregation Framework | MongoDB](https://www.mongodb.com/developer/products/mongodb/introduction-aggregation-framework/)
+
+## data samples
+
+1. metadata
+
+```js
+{
+    "image_id": "000ab0dfc1f4ba6f6531b908e4b7d71e",
+    "capture_timestamp": 1704063601
+}
+```
+
+2. bbox.model
+
+```js
+[
+  {
+    "image_id": "0b86e8fd3a5e91ec98078f95cd1da21b",
+    "bboxes": [
+      {"top": 0.051, "bottom": 0.382, "left": 0.388, "right": 0.564},
+      {"top": 0.358, "bottom": 0.768, "left": 0.476, "right": 0.568}
+    ],
+    "model_version": "1.0.0"
+  },
+  {
+    "image_id": "0b86e8fd3a5e91ec98078f95cd1da21b",
+    "bboxes": [
+      {"center_x": 0.234, "center_y": 0.487, "width": 0.165, "height": 0.318},
+      {"center_x": 0.577, "center_y": 0.534, "width": 0.114, "height": 0.406}
+    ],
+    "model_version": "2.0.0"
+  }
+]
+```
+
+3. bbox.human_audit
+
+```js
+{
+  "image_id": "31786d091d728861dd8312287d0e7ae1",
+  "model_version": "1.0.0",
+  "bbox_correct": true,
+  "auditor": "idkufm28qd@tfh.com",
+  "task_version": "1.0.0",
+  "timestamp": 1695380870.4499085,
+}
+```
+
+4. bbox.human_annotation
+
+```js
+[
+  {
+    "image_id": "4dc364f6038194b897e23721740f395a",
+    "bbox": {"center_x": 0.407, "center_y": 0.455, "width": 0.199, "height": 0.374},
+    "annotator": "wyenwqnmi4@tfh.com",
+    "task_version": "2.0.0",
+    "timestamp": 1706192047.0,
+  },
+  {
+    "image_id": "4dc364f6038194b897e23721740f395a",
+    "bbox": {"center_x": 0.482, "center_y": 0.392, "width": 0.04, "height": 0.61},
+    "annotator": "idkufm28qd@tfh.com",
+    "task_version": "2.0.0",
+    "timestamp": 1705962121.0,
+  }
+]
+```

@@ -1,8 +1,9 @@
 import os
 from typing import Optional
 
-from app.db import crud, database
 from fastapi import Depends, APIRouter, HTTPException
+
+from app.db import crud, database
 from app.core import log, config
 
 info_router = r = APIRouter(
@@ -27,7 +28,7 @@ def get_mongodb_info(db=Depends(database.get_db)):
 
 
 @r.get("/sample/{collection_name}")
-async def get_sample(collection_name: str, skip: Optional[int] = 0):
+async def get_sample(collection_name: str = "bbox_annotation", skip: Optional[int] = 0):
     """Get a sample document from the specified collection."""
     crud_class = crud.get_crud_class(collection_name)
     documents = crud_class.list(skip=skip, limit=1)

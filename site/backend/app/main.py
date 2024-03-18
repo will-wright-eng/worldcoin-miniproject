@@ -1,10 +1,12 @@
 import json
 
-from app.db import crud, database
 from fastapi import Depends, FastAPI, Request, HTTPException
+
+from app.db import crud, database
 from app.core import log, config
 from app.routers.info import info_router
 from app.routers.cruds import crud_router
+from app.routers.analytics import analytics_router
 
 logger = log.get_logger(__name__)
 app = FastAPI(title=config.PROJECT_NAME, docs_url="/api/docs", openapi_url="/api")
@@ -86,4 +88,9 @@ app.include_router(
     info_router,
     prefix="/v1",
     tags=["info"],
+)
+app.include_router(
+    analytics_router,
+    prefix="/v1",
+    tags=["analytics"],
 )
