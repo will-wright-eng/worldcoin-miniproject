@@ -11,7 +11,7 @@ logger = log.get_logger(__name__)
 
 
 @r.post("/{collection_name}", response_model=schema.DocumentInDB, status_code=201)
-async def create_document(
+def create_document(
     collection_name: str,
     document: schema.DocumentCreate,
     crud_class=Depends(crud.get_crud_class),
@@ -22,7 +22,7 @@ async def create_document(
 
 
 @r.get("/{collection_name}/{document_id}", response_model=schema.DocumentInDB)
-async def read_document(
+def read_document(
     collection_name: str,
     document_id: str,
     crud_class=Depends(crud.get_crud_class),
@@ -36,7 +36,7 @@ async def read_document(
 
 
 @r.put("/{collection_name}/{document_id}", response_model=schema.DocumentInDB)
-async def update_document(
+def update_document(
     collection_name: str,
     document_id: str,
     document: schema.DocumentUpdate,
@@ -51,7 +51,7 @@ async def update_document(
 
 
 @r.delete("/{collection_name}/{document_id}", status_code=204)
-async def delete_document(
+def delete_document(
     collection_name: str,
     document_id: str,
     crud_class=Depends(crud.get_crud_class),

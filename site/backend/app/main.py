@@ -6,6 +6,7 @@ from app.db import crud, database
 from app.core import log, config
 from app.routers.info import info_router
 from app.routers.cruds import crud_router
+from app.routers.status import status_router
 from app.routers.analytics import analytics_router
 
 logger = log.get_logger(__name__)
@@ -33,13 +34,13 @@ async def log_requests(request: Request, call_next):
 
 
 @app.on_event("shutdown")
-async def shutdown_event():
+def shutdown_event():
     db = database.get_db()
     db.client.close()
 
 
 @app.on_event("startup")
-async def startup_event():
+def startup_event():
     db = database.get_db()
     for collection_name, file_name in crud.collections.items():
         if not check_existing_data(db, collection_name):
@@ -54,13 +55,13 @@ async def startup_event():
 
 
 @app.get("/")
-async def root(db=Depends(database.get_db)):
+def root(db=Depends(database.get_db)):
     # Use the db instance directly.
     return {"message": "Hello World"}
 
 
 @app.get("/populate_database")
-async def populate_database(db=Depends(database.get_db)):
+def populate_database(db=Depends(database.get_db)):
     for collection_name, file_name in crud.collections.items():
         if not check_existing_data(db, collection_name):
             try:
@@ -93,4 +94,9 @@ app.include_router(
     analytics_router,
     prefix="/v1",
     tags=["analytics"],
+)
+app.include_router(
+    status_router,
+    prefix="/v1",
+    tags=["status"],
 )

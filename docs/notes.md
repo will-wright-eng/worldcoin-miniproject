@@ -65,6 +65,7 @@
 ## mongodb analytics
 
 - [Introduction to the MongoDB Aggregation Framework | MongoDB](https://www.mongodb.com/developer/products/mongodb/introduction-aggregation-framework/)
+- [PyMongo — MongoDB Drivers](https://www.mongodb.com/docs/drivers/pymongo/)
 
 ## data samples
 

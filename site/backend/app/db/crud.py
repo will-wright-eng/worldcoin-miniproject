@@ -58,6 +58,11 @@ class BaseCRUD:
         documents = self.collection.find().skip(skip).limit(limit)
         return [{**document, "_id": str(document["_id"])} for document in documents]
 
+    def list_image_ids(self) -> List[str]:
+        """List unique image_ids in the collection."""
+        documents = self.collection.find({}, {"image_id": 1, "_id": 0})
+        return [doc["image_id"] for doc in documents]
+
 
 class BBoxAnnotationCRUD(BaseCRUD):
     def __init__(self, db: MongoClient):
@@ -87,7 +92,6 @@ crud_classes = {
 }
 
 
-# Dependency to get CRUD class based on collection name
 def get_crud_class(collection_name: str):
     crud_class = crud_classes.get(collection_name)
     if not crud_class:

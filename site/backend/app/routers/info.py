@@ -28,7 +28,7 @@ def get_mongodb_info(db=Depends(database.get_db)):
 
 
 @r.get("/sample/{collection_name}")
-async def get_sample(collection_name: str = "bbox_annotation", skip: Optional[int] = 0):
+def get_sample(collection_name: str = "bbox_annotation", skip: Optional[int] = 0):
     """Get a sample document from the specified collection."""
     crud_class = crud.get_crud_class(collection_name)
     documents = crud_class.list(skip=skip, limit=1)
@@ -36,3 +36,10 @@ async def get_sample(collection_name: str = "bbox_annotation", skip: Optional[in
         return documents[0]
     else:
         raise HTTPException(status_code=404, detail="No documents found.")
+
+
+@r.get("/image_metadata/image_ids")
+def get_image_ids(db=Depends(database.get_db)):
+    image_metadata_crud = crud.ImageMetadataCRUD(db)
+    image_ids = image_metadata_crud.list_image_ids()
+    return {"image_ids": image_ids}
