@@ -148,19 +148,17 @@ def refresh_model_failure_inspection(db: Database = Depends(database.get_db)):
         if annotation and model:
             # prioritize human bounding box annotations over model predictions.
             # calculate the delta between 'predicted' and 'annotated'
-            model_version = model.get("model_version")
             predicted = []
-            if model_version == "2.0.0":
+            if model.get("model_version") == "2.0.0":
                 for box in model.get("bboxes"):
                     predicted.append(reshape_box(box))
             else:
                 predicted = model.get("bboxes")
 
-            task_version = annotation.get("task_version")
-            if task_version == "2.0.0":
-                annotated = reshape_box(box.get("bbox"))
+            if annotation.get("task_version") == "2.0.0":
+                annotated = [reshape_box(annotation.get("bbox"))]
             else:
-                annotated = annotation.get("bboxes")
+                annotated = [annotation.get("bboxes")]
 
         # CASE 2
         elif annotation and not model:

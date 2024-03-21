@@ -22,8 +22,10 @@ The following software is required to run this project locally:
 To start the project, run the following commands:
 
 ```bash
-make open # Open the frontend & backend UIs in the default browser
-make local # Run the project locally
+# Open the frontend & backend UIs in the default browser
+make open
+# Run the project locally
+make local
 ```
 
 If you're running `make local` for the first time then it will take some time to pull the images and start the containers. You can remove the `--build` flag within the `Makefile` to speed up the process in successive runs.
