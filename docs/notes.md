@@ -62,6 +62,27 @@
   - Prioritize human bounding box annotations over model predictions.
   - Prioritize most recent bounding boxes.
 
+```js
+{
+  "image_id": "123abc",
+  "predicted": {"top": 0.18, "left": 0.2, "bottom": 0.49, "right": 0.53},
+  "annotated": {"top": 0.17, "left": 0.24, "bottom": 0.41, "right": 0.55},
+  "delta": {"top": -0.01, "left": 0.04, "bottom": -0.08, "right": 0.02}
+},
+{
+  "image_id": "123abc",
+  "predicted": {"top": 0.16, "left": 0.47, "bottom": 0.34, "right": 0.57},
+  "annotated": {"top": 0.2, "left": 0.56, "bottom": 0.37, "right": 0.71},
+  "delta": {"top": 0.04, "left": 0.09, "bottom": 0.03, "right": 0.14}
+},
+{
+  "image_id": "123abc",
+  "predicted": {"top": 0.62, "left": 0.69, "bottom": 0.66, "right": 0.84},
+  "annotated": null
+  "delta": null
+}
+```
+
 ## mongodb analytics
 
 - [Introduction to the MongoDB Aggregation Framework | MongoDB](https://www.mongodb.com/developer/products/mongodb/introduction-aggregation-framework/)
@@ -133,4 +154,52 @@
     "timestamp": 1705962121.0,
   }
 ]
+```
+
+## debugging model failure collection
+
+- without annotated null: 12572
+- human annotations have versions as well
+
+```js
+{
+    "_id": {
+        "$oid": "65f2c82db15b6a2073a94fb3"
+    },
+    "image_id": "88549895b9668d09b45483c6d65a46b9",
+    "bbox": {
+        "top": 0.404,
+        "bottom": 0.959,
+        "left": 0.257,
+        "right": 0.949
+    },
+    "annotator": "idkufm28qd@tfh.com",
+    "task_version": "1.0.0",
+    "timestamp": 1692527304
+},
+{
+    "_id": {
+        "$oid": "65f2c82db15b6a2073a94fb2"
+    },
+    "image_id": "e0e04dd1013c5b365d67b1f334d8bc02",
+    "bbox": "None",
+    "annotator": "wh3pku3qm9@tfh.com",
+    "task_version": "2.0.0",
+    "timestamp": 1706860617
+},
+{
+  "_id": {
+    "$oid": "65f2c82db15b6a2073a94aae"
+  },
+  "image_id": "88257718c99c967ea1dc2541a14971f4",
+  "bbox": {
+    "center_x": 0.301,
+    "center_y": 0.198,
+    "width": 0.399,
+    "height": 0.191
+  },
+  "annotator": "3b758w9qqe@tfh.com",
+  "task_version": "2.0.0",
+  "timestamp": 1697553418.0
+}
 ```

@@ -36,19 +36,10 @@ docker-kill: ## kill all docker containers
 # deploy-prod: ## build hugo app and rsync files
 # 	@bash "${REPO_ROOT}/scripts/deploy.sh"
 
-# getdb: ## retrieve database
-# 	@bash "${REPO_ROOT}/scripts/getdb-prod.sh"
-
-# copydevdb: ## copy local db instance
-# 	@bash "${REPO_ROOT}/scripts/getdb-dev.sh"
-
 #* Open
 open: ## open browser to app and docs
-	open http://worldcoin.willwrighteng.local:${APP_PORT}
-	open http://worldcoin.willwrighteng.local:${BACKEND_PORT}/api/docs
-
-# console: ## open aws console
-# 	open https://s3.console.aws.amazon.com/s3/buckets/knowledgeproject?prefix=coffee-logging/&region=us-west-1
+	open ${SITE_URL}:${APP_PORT}
+	open ${SITE_URL}:${BACKEND_PORT}/api/docs
 
 #* Cleaning
 pycache-remove: ## cleanup subcommand - pycache-remove
@@ -72,11 +63,4 @@ shell:
 test:
 	docker exec -it [CONTAINER_ID] pytest
 
-# build-remove: ## remove generated files/dirs
-# 	rm -rf frontend-dashboard/.parcel-cache/
-# 	rm -rf frontend-dashboard/dist/
-# 	rm -rf frontend-dashboard/node_modules/
-# 	rm frontend-dashboard/package-lock.json
-
-# cleanup: build-remove pycache-remove dsstore-remove mypycache-remove ipynbcheckpoints-remove pytestcache-remove
 cleanup: pycache-remove dsstore-remove mypycache-remove ipynbcheckpoints-remove pytestcache-remove

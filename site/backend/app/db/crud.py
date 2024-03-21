@@ -58,10 +58,28 @@ class BaseCRUD:
         documents = self.collection.find().skip(skip).limit(limit)
         return [{**document, "_id": str(document["_id"])} for document in documents]
 
+    def list_annotated(self, skip: int = 0, limit: int = 10) -> List[Dict]:
+        documents = self.collection.find({"annotated": {"$ne": "null"}}).skip(skip).limit(limit)
+        return [{**document, "_id": str(document["_id"])} for document in documents]
+
+    # def list_annotated(self, skip: int = 0, limit: int = 10) -> List[Dict]:
+    #     # Query for documents where 'annotated' field exists and is not null
+    #     documents = self.collection.find({"annotated": {"$ne": None}}).skip(skip).limit(limit)
+    #     return [{**document, "_id": str(document["_id"])} for document in documents]
+
     def list_image_ids(self) -> List[str]:
         """List unique image_ids in the collection."""
         documents = self.collection.find({}, {"image_id": 1, "_id": 0})
         return [doc["image_id"] for doc in documents]
+
+    def find_by_image_id(self, image_id: str) -> List[Dict]:
+        """Find documents matching a specific image_id."""
+        documents = self.collection.find({"image_id": image_id})
+        return [{**document, "_id": str(document["_id"])} for document in documents]
+
+    def get_doc_count(self) -> int:
+        """Get the number of documents in the collection."""
+        return self.collection.count_documents({})
 
 
 class BBoxAnnotationCRUD(BaseCRUD):

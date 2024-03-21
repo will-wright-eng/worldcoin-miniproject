@@ -1,31 +1,33 @@
 from fastapi import Depends, APIRouter, HTTPException
-from pymongo import ReplaceOne
 from pymongo.database import Database
 
-from app.db import crud, database
+from app.db import database
+from app.core import log, schema
 
 status_router = r = APIRouter(
     prefix="/status",
 )
 
+logger = log.get_logger(__name__)
 
-@r.get("/fraction_processed")
+
+@r.get("/fraction_processed", response_model=schema.StatusResponse)
 def get_fraction_processed(db: Database = Depends(database.get_db)):
     total_images = db.image_metadata.count_documents({})
     processed_images = db.bbox_model.count_documents({})
     fraction_processed = processed_images / total_images if total_images > 0 else 0
-    return {"fraction_processed": fraction_processed}
+    return schema.StatusResponse(field_name="fraction_processed", value=fraction_processed)
 
 
-@r.get("/fraction_correct_audits")
+@r.get("/fraction_correct_audits", response_model=schema.StatusResponse)
 def get_fraction_correct_audits(db: Database = Depends(database.get_db)):
     total_audits = db.bbox_audit.count_documents({})
     correct_audits = db.bbox_audit.count_documents({"bbox_correct": True})
     fraction_correct = correct_audits / total_audits if total_audits > 0 else 0
-    return {"fraction_correct_audits": fraction_correct}
+    return schema.StatusResponse(field_name="fraction_correct_audits", value=fraction_correct)
 
 
-@r.get("/count_unannotated_predictions")
+@r.get("/count_unannotated_predictions", response_model=schema.StatusResponse)
 def count_unannotated_predictions(db: Database = Depends(database.get_db)):
     if "model_failure_inspection" not in db.list_collection_names():
         raise HTTPException(status_code=404, detail="Collection 'model_failure_inspection' does not exist.")
@@ -38,56 +40,47 @@ def count_unannotated_predictions(db: Database = Depends(database.get_db)):
             ],
         },
     )
-    return {"unannotated_predictions_count": unannotated_count}
+    return schema.StatusResponse(field_name="unannotated_predictions_count", value=unannotated_count)
 
 
-@r.post("/refresh_model_failure_inspection")
-def refresh_model_failure_inspection(db: Database = Depends(database.get_db)):
-    bbox_models = list(db.bbox_model.find({}))
-    operations = []
+# @r.get("/model_failure_inspection/list_image_ids")
+# def get_model_failure_inspection_image_ids(processed: bool = False, db: Database = Depends(database.get_db)):
+#     logger.debug(f"processed = {str(processed)}")
+#     if "model_failure_inspection" not in db.list_collection_names():
+#         logger.error("Collection 'model_failure_inspection' does not exist.")
+#         raise HTTPException(status_code=404, detail="Collection 'model_failure_inspection' does not exist.")
 
-    for model in bbox_models:
-        image_id = model["image_id"]
-        annotation = db.bbox_human_annotation.find_one({"image_id": image_id})
+#     crud_class = crud.BaseCRUD(db, "model_failure_inspection")
 
-        for bbox in model.get("bboxes", []):
-            predicted = bbox
-            annotated = None
-            delta = None
+#     if not processed:
+#         logger.debug("list W/O annotated filter")
+#         image_ids = crud_class.list(limit=100)
+#     else:
+#         logger.debug("list WITH annotated filter")
+#         # image_ids = crud_class.list_annotated()
+#         image_ids = crud_class.list_annotated(limit=100)
 
-            if annotation:
-                # calculate the delta between 'predicted' and 'annotated'
-                annotated = annotation.get("bbox")
-                delta = {
-                    "top": annotated["top"] - predicted["top"],
-                    "left": annotated["left"] - predicted["left"],
-                    "bottom": annotated["bottom"] - predicted["bottom"],
-                    "right": annotated["right"] - predicted["right"],
-                }
+#     if not image_ids:
+#         logger.error("No documents found.")
+#         raise HTTPException(status_code=404, detail="No documents found.")
 
-            doc = {
-                "image_id": image_id,
-                "predicted": predicted,
-                "annotated": annotated,
-                "delta": delta,
-            }
-            operations.append(ReplaceOne({"image_id": image_id}, doc, upsert=True))
-
-    if operations:
-        db.model_failure_inspection.bulk_write(operations)
-
-    return {"message": "Model failure inspection collection refreshed."}
+#     logger.debug(f"length image_ids: {str(len(image_ids))}")
+#     return {"image_ids": [x.get("image_id") for x in image_ids]}
 
 
-@r.get("/model_failure_inspection/sample")
-def get_model_failure_inspection_sample(db: Database = Depends(database.get_db)):
-    if "model_failure_inspection" not in db.list_collection_names():
-        raise HTTPException(status_code=404, detail="Collection 'model_failure_inspection' does not exist.")
+# @r.post("/model_failure_inspection/get_image_data")
+# def get_model_failure_inspection_sample(request: schema.ImageDataRequest, db: Database = Depends(database.get_db)):
+#     image_id = request.image_id
+#     logger.debug(image_id)
+#     if "model_failure_inspection" not in db.list_collection_names():
+#         logger.error("Collection 'model_failure_inspection' does not exist.")
+#         raise HTTPException(status_code=404, detail="Collection 'model_failure_inspection' does not exist.")
 
-    crud_class = crud.BaseCRUD(db, "model_failure_inspection")
-    documents = crud_class.list()
+#     crud_class = crud.BaseCRUD(db, "model_failure_inspection")
+#     documents = crud_class.find_by_image_id(image_id)
 
-    if documents:
-        return documents[0]
-    else:
-        raise HTTPException(status_code=404, detail="No documents found.")
+#     if not documents:
+#         logger.error("No documents found.")
+#         raise HTTPException(status_code=404, detail="No documents found.")
+
+#     return documents

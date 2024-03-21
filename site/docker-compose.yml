@@ -22,22 +22,13 @@ services:
     volumes:
     - mongo-data:/data/db
 
-  # frontend-dashboard:
-  #   build:
-  #     context: frontend-dashboard
-  #     dockerfile: local.dockerfile
-  #     # dockerfile: Dockerfile # local testing
-  #   stdin_open: true
-  #   volumes:
-  #   - './frontend-dashboard:/app:cached'
-  #   - './frontend-dashboard/node_modules:/app/node_modules:cached'
-  #   environment:
-  #   - NODE_ENV=development
-  #   ports:
-  #   - "1234:1234"
-  #   # command: nginx -g 'daemon off;' # local testing
-  #   networks:
-  #   - app-network
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    volumes:
+    - ./frontend/src:/usr/share/nginx/html
+    command: nginx -g 'daemon off;'
 
   nginx:
     build:
@@ -46,10 +37,8 @@ services:
     ports:
     - "${APP_PORT}:${APP_PORT}"
     depends_on:
-    # - frontend
+    - frontend
     - backend
-#     networks:
-#     - app-network
 
 # networks:
 #   app-network:

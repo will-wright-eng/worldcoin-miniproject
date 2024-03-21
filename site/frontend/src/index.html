@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - Bounding Box App</title>
+    <link rel="stylesheet" href="css/pico.min.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <header class="container" role="banner">
+        <nav class="navigation" role="navigation">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="annotation.html">Annotation</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h1>Home</h1>
+        <div>
+            <h2>Metrics</h2>
+            <p>Processed Fraction: <span id="fraction_processed">Loading...</span></p>
+            <p>Correct Audits Fraction: <span id="fraction_correct_audits">Loading...</span></p>
+            <p>Unannotated Predictions Count: <span id="unannotated_predictions_count">Loading...</span></p>
+            <button id="refreshMetrics">Refresh Metrics</button>
+        </div>
+        <div>
+            <h2>Sample Model Failure Inspection</h2>
+            <p><span id="sampleDataResult">Press 'Sample Data' to display.</span></p>
+            <button id="sampleSubmit">Sample Data</button>
+        </div>
+        <div>
+            <h2>Data Details</h2>
+            <p>Current Working Directory: <span id="cwd">Loading...</span></p>
+            <p>Data Files in App Directory: <span id="dataFiles">Loading...</span></p>
+            <p>Data Directory Files: <span id="dataDirFiles">Loading...</span></p>
+        </div>
+        <div>
+            <h2>MongoDB Information</h2>
+            <p>MongoDB URI: <span id="mongodbUri">Loading...</span></p>
+            <p>Database Name: <span id="databaseName">Loading...</span></p>
+            <p>Collections: <span id="collections">Loading...</span></p>
+        </div>
+        <div id="collectionsContainer"></div>
+    </div>
+    <script src="js/home.js"></script>
+</body>
+</html>

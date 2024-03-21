@@ -4,6 +4,7 @@ from fastapi import Depends, FastAPI, Request, HTTPException
 
 from app.db import crud, database
 from app.core import log, config
+from app.routers.mfi import mfi_router
 from app.routers.info import info_router
 from app.routers.cruds import crud_router
 from app.routers.status import status_router
@@ -55,8 +56,7 @@ def startup_event():
 
 
 @app.get("/")
-def root(db=Depends(database.get_db)):
-    # Use the db instance directly.
+def root():
     return {"message": "Hello World"}
 
 
@@ -99,4 +99,9 @@ app.include_router(
     status_router,
     prefix="/v1",
     tags=["status"],
+)
+app.include_router(
+    mfi_router,
+    prefix="/v1",
+    tags=["model_failure_inspection"],
 )

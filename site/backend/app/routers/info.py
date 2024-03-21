@@ -38,8 +38,23 @@ def get_sample(collection_name: str = "bbox_annotation", skip: Optional[int] = 0
         raise HTTPException(status_code=404, detail="No documents found.")
 
 
-@r.get("/image_metadata/image_ids")
+@r.get("/count/{collection_name}")
+def get_count(collection_name: str = "bbox_annotation"):
+    """Get the number of documents in the specified collection."""
+    crud_class = crud.get_crud_class(collection_name)
+    count = crud_class.get_doc_count()
+    return {"count": count}
+
+
+@r.get("/image_ids")
 def get_image_ids(db=Depends(database.get_db)):
     image_metadata_crud = crud.ImageMetadataCRUD(db)
     image_ids = image_metadata_crud.list_image_ids()
     return {"image_ids": image_ids}
+
+
+@r.get("/image_ids_limit/{limit}")
+def get_image_ids_limit(limit: int = 10, db=Depends(database.get_db)):
+    image_metadata_crud = crud.ImageMetadataCRUD(db)
+    image_ids = image_metadata_crud.list(limit=limit)
+    return {"image_ids": [x.get("image_id") for x in image_ids]}
