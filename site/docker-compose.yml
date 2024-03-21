@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    tty: true
+    volumes:
+    - ./backend:/app/:cached
+    - ./data:/app/app/data
+    ports:
+    - "${BACKEND_PORT}:${BACKEND_PORT}"
+    command: uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT} --reload
+    depends_on:
+    - mongo
+    # networks:
+    # - app-network
+
+  mongo:
+    image: mongo:latest
+    volumes:
+    - mongo-data:/data/db
+
+  frontend:
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    volumes:
+    - ./frontend/src:/usr/share/nginx/html
+    command: nginx -g 'daemon off;'
+
+  nginx:
+    build:
+      context: nginx
+      dockerfile: Dockerfile
+    ports:
+    - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+    - frontend
+    - backend
+
+# networks:
+#   app-network:
+#     driver: bridge
+
+volumes:
+  mongo-data:

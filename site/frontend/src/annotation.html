@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annotation Tool</title>
+    <link rel="stylesheet" href="css/pico.min.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            margin-bottom: 1rem;
+        }
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #bounding-box-canvas {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.0.0-rc.1/fabric.min.js"></script>
+</head>
+<body>
+    <header class="container" role="banner">
+        <nav class="navigation" role="navigation">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="annotation.html">Annotation</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <h2>Annotation Tool</h2>
+        <div id="imageSelector" class="mb-2">
+            <!-- Add this HTML for the dropdown and submit button -->
+            <select id="imageIdSelect">
+                <option value="">Select an Image ID</option>
+                <!-- Image IDs will be populated here -->
+            </select>
+            <label for="processedImagesCheckbox">Processed Images</label>
+            <input type="checkbox" id="processedImagesCheckbox" name="processedImages">
+            <button id="refreshImageIdSelect">Refresh Image IDs</button>
+            <button id="fetchDataButton">Draw Image ID</button>
+            <button id="resetCanvasButton">Reset Boxes</button>
+            <div id="errorContainer" style="display: none; color: red;"></div>
+            <!-- <button id="saveAnnotation">Save Annotation</button> -->
+        </div>
+        <canvas id="bounding-box-canvas"></canvas>
+        <div id="statusBar">
+            <p>Status: <span id="statusMessage">Idle</span></p>
+        </div>
+    </div>
+    <script src="js/app.js" type="module"></script>
+    <!-- <script src="js/image.js"></script> -->
+    <script>
+        // Ensure the canvas is responsive
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = new fabric.Canvas('bounding-box-canvas');
+            function resizeCanvas() {
+                canvas.setWidth(window.innerWidth * 0.8);
+                canvas.setHeight(window.innerHeight * 0.6);
+                canvas.renderAll();
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+        });
+    </script>
+</body>
+</html>

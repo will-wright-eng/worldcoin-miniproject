@@ -1,0 +1,73 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+
+default_language_version:
+  python: python3.9
+
+default_stages: [commit, push]
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-yaml
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
+  - id: check-toml
+  - id: check-ast
+  # - id: check-added-large-files
+- repo: https://github.com/asottile/add-trailing-comma
+  rev: v3.1.0
+  hooks:
+  - id: add-trailing-comma
+- repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+  rev: v2.12.0
+  hooks:
+  - id: pretty-format-yaml
+    args:
+    - --autofix
+    - --preserve-quotes
+    - --indent=2
+- repo: https://github.com/igorshubovych/markdownlint-cli
+  rev: v0.39.0
+  hooks:
+  - id: markdownlint
+    args:
+    - --fix
+    verbose: true
+    entry: bash -c 'markdownlint "$@" || true' --
+- repo: https://github.com/psf/black
+  rev: 24.1.1
+  hooks:
+  - id: black
+    args:
+    - "-l 120"
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.2.5
+  hooks:
+  - id: codespell
+- repo: https://github.com/pycqa/isort
+  rev: 5.13.2
+  hooks:
+  - id: isort
+    # args: [ "--settings-file", "pyproject.toml", "--order-by-type", "--length-sort", "--profile", "black", "--filter-files"]
+    # args: ["--settings-file", "pyproject.toml", "--filter-files"]
+    args: ["--settings-file", ".isort.cfg", "--filter-files"]
+    name: isort (python)
+  - id: isort
+    name: isort (cython)
+    types: [cython]
+  - id: isort
+    name: isort (pyi)
+    types: [pyi]
+- repo: https://github.com/pycqa/flake8
+  rev: 7.0.0
+  hooks:
+  - id: flake8
+    args: ['--ignore=E999,W504,W503,E501,B008']
+    additional_dependencies:
+    - flake8-bugbear
+    - flake8-comprehensions
+    - flake8-simplify
+    verbose: true
+    entry: bash -c 'flake8 "$@" || true' --

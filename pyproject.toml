@@ -1,0 +1,13 @@
+[tool.isort]
+profile = "black"
+order_by_type = true
+length_sort = true
+# src_paths = ["src", "tests"]
+extend_skip = [".md"]
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+#
+# [tool.isort.known_first_party]
+# "your_project_name" = "app"
+#
+# [tool.isort.known_third_party]
+# "known_third_party_module" = ["fastapi", "pymongo", "pydantic"]
