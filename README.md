@@ -14,8 +14,8 @@ This project involves developing a data processing pipeline for a face detection
 
 The following software is required to run this project locally:
 
-- Docker
-- Docker Compose
+- [Docker](https://docs.docker.com/engine/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
 ## Usage
 

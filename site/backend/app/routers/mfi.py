@@ -47,7 +47,6 @@ def get_image_id_list(processed: bool = False, db: Database = Depends(database.g
         image_ids = crud_class.list(limit=100)
     else:
         logger.debug("list WITH annotated filter")
-        # image_ids = crud_class.list_annotated()
         image_ids = crud_class.list_annotated(limit=100)
 
     if not image_ids:
@@ -87,66 +86,6 @@ def get_image_data(request: schema.ImageDataRequest, db: Database = Depends(data
     return documents
 
 
-# @r.post("/refresh_collection")
-# def refresh_model_failure_inspection(db: Database = Depends(database.get_db)):
-#     # image_meta = list(db.image_metadata.find({}))
-#     # operations = []
-
-#     # for image in image_meta:
-#     #     image_id = image["image_id"]
-#         # bbox_model = list(db.bbox_model.find({"image_id": image_id}))
-#         # logger.debug(f"bbox_model list len: {len(bbox_model)}")
-#         # annotation = list(db.bbox_human_annotation.find({"image_id": image_id}))
-#     # annotation = db.bbox_annotation.find({})
-#     annotation = db.bbox_annotation.find({})
-
-#     # flag = True
-#     count = 0
-#     # while flag:
-#     # logger.debug(f"annotation list len: {len(list(annotation))}")
-#     # logger.debug(f"data: {json.dumps(list(annotation)[:10], indent=2)}")
-#     for element in annotation:
-#         logger.debug(f"annotation: {element}")
-#         logger.debug(f"annotation type: {type(element)}")
-#         count += 1
-#         if count > 10:
-#             # flag = False
-#             break
-
-#         # annotation = db.bbox_human_annotation.find_one({"image_id": image_id})
-
-#         # for bbox in bbox_model.get("bboxes", []):
-#     #     for bbox in bbox_model:
-#     #         predicted = bbox
-#     #         annotated = None
-#     #         delta = None
-
-#     #         if annotation:
-#     #             logger.debug(f"annotation found for image_id: {image_id}")
-#     #             # calculate the delta between 'predicted' and 'annotated'
-#     #             annotated = annotation.get("bbox")
-#     #             delta = {
-#     #                 "top": annotated["top"] - predicted["top"],
-#     #                 "left": annotated["left"] - predicted["left"],
-#     #                 "bottom": annotated["bottom"] - predicted["bottom"],
-#     #                 "right": annotated["right"] - predicted["right"],
-#     #             }
-#     #             logger.debug(f"delta: {json.dumps(delta, indent=2)}")
-
-#     #         doc = {
-#     #             "image_id": image_id,
-#     #             "predicted": predicted,
-#     #             "annotated": annotated,
-#     #             "delta": delta,
-#     #         }
-#     #         operations.append(ReplaceOne({"image_id": image_id}, doc, upsert=True))
-
-#     # if operations:
-#     #     db.model_failure_inspection.bulk_write(operations)
-
-#     return {"message": "Model failure inspection collection refreshed."}
-
-
 def reshape_box(box):
     if box:
         return {
@@ -173,17 +112,20 @@ def get_delta(annotated, predicted):
 
 @r.post("/refresh_collection")
 def refresh_model_failure_inspection(db: Database = Depends(database.get_db)):
+    """
+    assume that there is only one annotation per image
+    find_one() returns a dict
+    multiple models per image, use the most recent model_version
+    find() returns a cursor that can be iterated through
+    list() constructor loads the entire collection into memory
+    """
     bbox_models = db.bbox_model.find({})
     operations = []
 
     counter = 0
     for model_document in bbox_models:
         image_id = model_document.get("image_id")
-        # assume that there is only one annotation per image
-        # find_one() returns a dict
-        # multiple models per image, use the most recent model_version
-        # find() returns a cursor that can be iterated through
-        # list() constructor loads the entire collection into memory
+
         annotations = list(db.bbox_annotation.find({"image_id": image_id}))
         if len(annotations) > 1:
             logger.debug(f"annotation count: {str(len(annotations))}")
@@ -276,58 +218,12 @@ def refresh_model_failure_inspection(db: Database = Depends(database.get_db)):
     return {"message": "Model failure inspection collection refreshed."}
 
 
-# write endpoint to log debug all annotations to determine task versions and bbox shape
 @r.get("/log_annotations")
 def log_annotations(db: Database = Depends(database.get_db)):
+    """write endpoint to log debug all annotations to determine task versions and bbox shape"""
     documents = db.bbox_annotation.find({})
     for document in documents:
-        # logger.debug(f"document: {parse_json(document)}")
         tmp = parse_json(document)
         logger.debug(f"document: {json.dumps(tmp, indent=2)}")
-        # if tmp.get('bbox'):
-        #     logger.debug(f"len bbox: {len(tmp.get('bbox'))}")
-        # else:
-        #     logger.debug(f"document: {json.dumps(tmp, indent=2)}")
 
-    # return [{**document, "_id": str(document["_id"])} for document in documents]
     return {"message": "logging complete"}
-
-
-# @r.post("/refresh_collection")
-# def refresh_model_failure_inspection(db: Database = Depends(database.get_db)):
-#     bbox_models = list(db.bbox_model.find({}))
-#     operations = []
-
-#     for model in bbox_models:
-#         image_id = model["image_id"]
-#         annotation = db.bbox_human_annotation.find_one({"image_id": image_id})
-
-#         for bbox in model.get("bboxes", []):
-#             predicted = bbox
-#             annotated = None
-#             delta = None
-
-#             if annotation:
-#                 logger.debug(f"annotation found for image_id: {image_id}")
-#                 # calculate the delta between 'predicted' and 'annotated'
-#                 annotated = annotation.get("bbox")
-#                 delta = {
-#                     "top": annotated["top"] - predicted["top"],
-#                     "left": annotated["left"] - predicted["left"],
-#                     "bottom": annotated["bottom"] - predicted["bottom"],
-#                     "right": annotated["right"] - predicted["right"],
-#                 }
-#                 logger.debug(f"delta: {json.dumps(delta, indent=2)}")
-
-#             doc = {
-#                 "image_id": image_id,
-#                 "predicted": predicted,
-#                 "annotated": annotated,
-#                 "delta": delta,
-#             }
-#             operations.append(ReplaceOne({"image_id": image_id}, doc, upsert=True))
-
-#     if operations:
-#         db.model_failure_inspection.bulk_write(operations)
-
-#     return {"message": "Model failure inspection collection refreshed."}

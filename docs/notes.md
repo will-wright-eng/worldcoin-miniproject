@@ -203,3 +203,49 @@
   "timestamp": 1697553418.0
 }
 ```
+
+### first pass endpoint
+
+```python
+@r.get("/model_failure_inspection/list_image_ids")
+def get_model_failure_inspection_image_ids(processed: bool = False, db: Database = Depends(database.get_db)):
+    logger.debug(f"processed = {str(processed)}")
+    if "model_failure_inspection" not in db.list_collection_names():
+        logger.error("Collection 'model_failure_inspection' does not exist.")
+        raise HTTPException(status_code=404, detail="Collection 'model_failure_inspection' does not exist.")
+
+    crud_class = crud.BaseCRUD(db, "model_failure_inspection")
+
+    if not processed:
+        logger.debug("list W/O annotated filter")
+        image_ids = crud_class.list(limit=100)
+    else:
+        logger.debug("list WITH annotated filter")
+        # image_ids = crud_class.list_annotated()
+        image_ids = crud_class.list_annotated(limit=100)
+
+    if not image_ids:
+        logger.error("No documents found.")
+        raise HTTPException(status_code=404, detail="No documents found.")
+
+    logger.debug(f"length image_ids: {str(len(image_ids))}")
+    return {"image_ids": [x.get("image_id") for x in image_ids]}
+
+
+@r.post("/model_failure_inspection/get_image_data")
+def get_model_failure_inspection_sample(request: schema.ImageDataRequest, db: Database = Depends(database.get_db)):
+    image_id = request.image_id
+    logger.debug(image_id)
+    if "model_failure_inspection" not in db.list_collection_names():
+        logger.error("Collection 'model_failure_inspection' does not exist.")
+        raise HTTPException(status_code=404, detail="Collection 'model_failure_inspection' does not exist.")
+
+    crud_class = crud.BaseCRUD(db, "model_failure_inspection")
+    documents = crud_class.find_by_image_id(image_id)
+
+    if not documents:
+        logger.error("No documents found.")
+        raise HTTPException(status_code=404, detail="No documents found.")
+
+    return documents
+```
