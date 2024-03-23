@@ -44,4 +44,4 @@ You can implement this within the `.env` file -- you'll see my domain name mask 
 
 `Annotation Tool`
 
-![annotation_tool](./docs/annotation_tool.png)
+![annotation_tool](./docs/annotation-tool.png)
