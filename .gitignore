@@ -15,6 +15,5 @@ package-lock.json
 dist
 .cache
 *.json
-*.png
 *.zip
 __pycache__

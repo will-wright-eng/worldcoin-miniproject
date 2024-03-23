@@ -35,3 +35,13 @@ If you're running `make local` for the first time then it will take some time to
 I prefer to use `dnsmasq` for local development because it allows me to use wildcard routing with my nginx service. Plus it avoids any CORS issues.
 
 You can implement this within the `.env` file -- you'll see my domain name mask within the dotenv file and `nginx.conf`.
+
+## User Interface
+
+`Dashboard Page`
+
+![dashboard](./docs/dashboard.png)
+
+`Annotation Tool`
+
+![annotation_tool](./docs/annotation_tool.png)
