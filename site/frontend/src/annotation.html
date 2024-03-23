@@ -18,7 +18,6 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
         #bounding-box-canvas {
             max-width: 100%;
@@ -39,27 +38,27 @@
     </header>
     <div class="container">
         <h2>Annotation Tool</h2>
-        <div id="imageSelector" class="mb-2">
-            <!-- Add this HTML for the dropdown and submit button -->
-            <select id="imageIdSelect">
-                <option value="">Select an Image ID</option>
-                <!-- Image IDs will be populated here -->
-            </select>
-            <label for="processedImagesCheckbox">Processed Images</label>
-            <input type="checkbox" id="processedImagesCheckbox" name="processedImages">
-            <button id="refreshImageIdSelect">Refresh Image IDs</button>
-            <button id="fetchDataButton">Draw Image ID</button>
-            <button id="resetCanvasButton">Reset Boxes</button>
-            <div id="errorContainer" style="display: none; color: red;"></div>
-            <!-- <button id="saveAnnotation">Save Annotation</button> -->
+        <div class="grid">
+            <div class="col" style="padding: 1rem;">
+                <select id="imageIdSelect">
+                    <option value="">Select an Image ID</option>
+                    <!-- Image IDs will be populated here -->
+                </select>
+                <button id="refreshImageIdSelect">Refresh Image IDs</button>
+                <label for="processedImagesCheckbox">Human Annotated Filter</label>
+                <input type="checkbox" id="processedImagesCheckbox" name="processedImages">
+            </div>
+            <div class="col" style="padding: 1rem;">
+                <button id="fetchDataButton">Draw Image ID</button>
+                <button id="resetCanvasButton">Reset Boxes</button>
+            </div>
         </div>
-        <canvas id="bounding-box-canvas"></canvas>
-        <div id="statusBar">
-            <p>Status: <span id="statusMessage">Idle</span></p>
+        <div id="errorContainer" style="display: none; color: red;"></div>
+        <div class="container" style="padding: 1rem;">
+            <canvas id="bounding-box-canvas"></canvas>
         </div>
     </div>
     <script src="js/app.js" type="module"></script>
-    <!-- <script src="js/image.js"></script> -->
     <script>
         // Ensure the canvas is responsive
         document.addEventListener('DOMContentLoaded', function() {

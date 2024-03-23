@@ -59,8 +59,8 @@ class BaseCRUD:
         return [{**document, "_id": str(document["_id"])} for document in documents]
 
     def list_annotated(self, skip: int = 0, limit: int = 10) -> List[Dict]:
-        documents = self.collection.find({"annotated": {"$ne": "null"}}).skip(skip).limit(limit)
-        # documents = self.collection.find({"annotated": {"$ne": None}}).skip(skip).limit(limit)
+        # documents = self.collection.find({"annotated": {"$ne": "null"}}).skip(skip).limit(limit)
+        documents = self.collection.find({"annotated": {"$ne": None}}).skip(skip).limit(limit)
         return [{**document, "_id": str(document["_id"])} for document in documents]
 
     def list_image_ids(self) -> List[str]:
