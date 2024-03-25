@@ -16,6 +16,7 @@ The following software is required to run this project locally:
 
 - [Docker](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
+- [Make](https://www.gnu.org/software/make/#download)
 
 ## Usage
 
@@ -36,6 +37,8 @@ I prefer to use `dnsmasq` for local development because it allows me to use wild
 
 You can implement this within the `.env` file -- you'll see my domain name mask within the dotenv file and `nginx.conf`.
 
+- [Dnsmasq - network services for small networks.](https://dnsmasq.org/doc.html)
+
 ## User Interface
 
 `Dashboard Page`
@@ -45,3 +48,15 @@ You can implement this within the `.env` file -- you'll see my domain name mask 
 `Annotation Tool`
 
 ![annotation_tool](./docs/annotation-tool.png)
+
+`Swagger Docs`
+
+![swagger_docs](./docs/swagger-docs.png)
+
+## Feature Creep (aka Future Work)
+
+- dashboard
+  - real-time updates (server-side events)
+- annotation tool
+  - save canvas
+  - load annotated image

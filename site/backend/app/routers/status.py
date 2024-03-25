@@ -13,8 +13,15 @@ logger = log.get_logger(__name__)
 
 @r.get("/fraction_processed", response_model=schema.StatusResponse)
 def get_fraction_processed(db: Database = Depends(database.get_db)):
-    total_images = db.image_metadata.count_documents({})
-    processed_images = db.bbox_model.count_documents({})
+    """
+    Statement: Fraction of all available images that have been processed by the bounding box model
+    - assume all images in metadata are distinct and represent "all available images"
+    - assume that any version of bbox model qualifies as "processed"
+    - if an image is not in the bbox_model collection, it has not been processed
+    - if an image is in the bbox_model collection, it has been processed
+    """
+    total_images = len(db.image_metadata.distinct("image_id"))
+    processed_images = len(db.bbox_model.distinct("image_id"))
     fraction_processed = processed_images / total_images if total_images > 0 else 0
     return schema.StatusResponse(field_name="fraction_processed", value=fraction_processed)
 

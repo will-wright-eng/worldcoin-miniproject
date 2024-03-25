@@ -216,12 +216,12 @@ def refresh_model_failure_inspection(db: Database = Depends(database.get_db)):
     return {"message": "Model failure inspection collection refreshed."}
 
 
-@r.get("/log_annotations")
-def log_annotations(db: Database = Depends(database.get_db)):
-    """write endpoint to log debug all annotations to determine task versions and bbox shape"""
-    documents = db.bbox_annotation.find({})
-    for document in documents:
-        tmp = parse_json(document)
-        logger.debug(f"document: {json.dumps(tmp, indent=2)}")
+# @r.get("/log_annotations")
+# def log_annotations(db: Database = Depends(database.get_db)):
+#     """write endpoint to log debug all annotations to determine task versions and bbox shape"""
+#     documents = db.bbox_annotation.find({})
+#     for document in documents:
+#         tmp = parse_json(document)
+#         logger.debug(f"document: {json.dumps(tmp, indent=2)}")
 
-    return {"message": "logging complete"}
+#     return {"message": "logging complete"}
