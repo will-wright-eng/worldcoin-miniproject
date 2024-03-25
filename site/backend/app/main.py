@@ -6,9 +6,11 @@ from app.db import crud, database
 from app.core import log, config
 from app.routers.mfi import mfi_router
 from app.routers.info import info_router
-from app.routers.cruds import crud_router
+
+# from app.routers.cruds import crud_router
 from app.routers.status import status_router
-from app.routers.analytics import analytics_router
+
+# from app.routers.analytics import analytics_router
 
 logger = log.get_logger(__name__)
 app = FastAPI(title=config.PROJECT_NAME, docs_url="/api/docs", openapi_url="/api")
@@ -80,21 +82,21 @@ def populate_database(db=Depends(database.get_db)):
 
 
 # Routers
-app.include_router(
-    crud_router,
-    prefix="/v1",
-    tags=["crud"],
-)
+# app.include_router(
+#     crud_router,
+#     prefix="/v1",
+#     tags=["crud"],
+# )
 app.include_router(
     info_router,
     prefix="/v1",
     tags=["info"],
 )
-app.include_router(
-    analytics_router,
-    prefix="/v1",
-    tags=["analytics"],
-)
+# app.include_router(
+#     analytics_router,
+#     prefix="/v1",
+#     tags=["analytics"],
+# )
 app.include_router(
     status_router,
     prefix="/v1",

@@ -46,11 +46,11 @@ def get_count(collection_name: str = "bbox_annotation"):
     return {"count": count}
 
 
-@r.get("/image_ids")
-def get_image_ids(db=Depends(database.get_db)):
-    image_metadata_crud = crud.ImageMetadataCRUD(db)
-    image_ids = image_metadata_crud.list_image_ids()
-    return {"image_ids": image_ids}
+# @r.get("/image_ids")
+# def get_image_ids(db=Depends(database.get_db)):
+#     image_metadata_crud = crud.ImageMetadataCRUD(db)
+#     image_ids = image_metadata_crud.list_image_ids()
+#     return {"image_ids": image_ids}
 
 
 @r.get("/image_ids_limit/{limit}")

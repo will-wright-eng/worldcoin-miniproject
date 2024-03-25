@@ -13,8 +13,15 @@ logger = log.get_logger(__name__)
 
 @r.get("/fraction_processed", response_model=schema.StatusResponse)
 def get_fraction_processed(db: Database = Depends(database.get_db)):
-    total_images = db.image_metadata.count_documents({})
-    processed_images = db.bbox_model.count_documents({})
+    """
+    Statement: Fraction of all available images that have been processed by the bounding box model
+    - assume all images in metadata are distinct and represent "all available images"
+    - assume that any version of bbox model qualifies as "processed"
+    - if an image is not in the bbox_model collection, it has not been processed
+    - if an image is in the bbox_model collection, it has been processed
+    """
+    total_images = len(db.image_metadata.distinct("image_id"))
+    processed_images = len(db.bbox_model.distinct("image_id"))
     fraction_processed = processed_images / total_images if total_images > 0 else 0
     return schema.StatusResponse(field_name="fraction_processed", value=fraction_processed)
 
@@ -41,46 +48,3 @@ def count_unannotated_predictions(db: Database = Depends(database.get_db)):
         },
     )
     return schema.StatusResponse(field_name="unannotated_predictions_count", value=unannotated_count)
-
-
-# @r.get("/model_failure_inspection/list_image_ids")
-# def get_model_failure_inspection_image_ids(processed: bool = False, db: Database = Depends(database.get_db)):
-#     logger.debug(f"processed = {str(processed)}")
-#     if "model_failure_inspection" not in db.list_collection_names():
-#         logger.error("Collection 'model_failure_inspection' does not exist.")
-#         raise HTTPException(status_code=404, detail="Collection 'model_failure_inspection' does not exist.")
-
-#     crud_class = crud.BaseCRUD(db, "model_failure_inspection")
-
-#     if not processed:
-#         logger.debug("list W/O annotated filter")
-#         image_ids = crud_class.list(limit=100)
-#     else:
-#         logger.debug("list WITH annotated filter")
-#         # image_ids = crud_class.list_annotated()
-#         image_ids = crud_class.list_annotated(limit=100)
-
-#     if not image_ids:
-#         logger.error("No documents found.")
-#         raise HTTPException(status_code=404, detail="No documents found.")
-
-#     logger.debug(f"length image_ids: {str(len(image_ids))}")
-#     return {"image_ids": [x.get("image_id") for x in image_ids]}
-
-
-# @r.post("/model_failure_inspection/get_image_data")
-# def get_model_failure_inspection_sample(request: schema.ImageDataRequest, db: Database = Depends(database.get_db)):
-#     image_id = request.image_id
-#     logger.debug(image_id)
-#     if "model_failure_inspection" not in db.list_collection_names():
-#         logger.error("Collection 'model_failure_inspection' does not exist.")
-#         raise HTTPException(status_code=404, detail="Collection 'model_failure_inspection' does not exist.")
-
-#     crud_class = crud.BaseCRUD(db, "model_failure_inspection")
-#     documents = crud_class.find_by_image_id(image_id)
-
-#     if not documents:
-#         logger.error("No documents found.")
-#         raise HTTPException(status_code=404, detail="No documents found.")
-
-#     return documents

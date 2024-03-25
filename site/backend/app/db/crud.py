@@ -26,10 +26,10 @@ class BaseCRUD:
         """Create a new collection if it doesn't exist."""
         try:
             self.db.create_collection(self.collection_name)
-            self.collection = self.db[self.collection_name]  # Update the collection reference
+            self.collection = self.db[self.collection_name]
             return True
         except CollectionInvalid:
-            return False  # Collection already exists
+            return False
 
     def create(self, data: Dict) -> str:
         """Create a new document in the collection."""
@@ -59,13 +59,9 @@ class BaseCRUD:
         return [{**document, "_id": str(document["_id"])} for document in documents]
 
     def list_annotated(self, skip: int = 0, limit: int = 10) -> List[Dict]:
-        documents = self.collection.find({"annotated": {"$ne": "null"}}).skip(skip).limit(limit)
+        # documents = self.collection.find({"annotated": {"$ne": "null"}}).skip(skip).limit(limit)
+        documents = self.collection.find({"annotated": {"$ne": None}}).skip(skip).limit(limit)
         return [{**document, "_id": str(document["_id"])} for document in documents]
-
-    # def list_annotated(self, skip: int = 0, limit: int = 10) -> List[Dict]:
-    #     # Query for documents where 'annotated' field exists and is not null
-    #     documents = self.collection.find({"annotated": {"$ne": None}}).skip(skip).limit(limit)
-    #     return [{**document, "_id": str(document["_id"])} for document in documents]
 
     def list_image_ids(self) -> List[str]:
         """List unique image_ids in the collection."""
