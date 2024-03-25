@@ -34,6 +34,8 @@ If you're running `make local` for the first time then it will take some time to
 
 Navigate to [http://localhost](http://localhost) to view the frontend UI -- the homepage will display information about the contents of the MongoDB instance. If MongoDB Information does not display collections corresponding to each json file (and json files are listed under the Data Details section) then navigate to [http://localhost:8001/api/docs](http://localhost:8001/api/docs) to view the Swagger Docs and execute the root endpoint `/populate_database`.
 
+From the same backend UI, execute the `/v1/model_failure_inspection/refresh_collection` endpoint to generate the `model_failure_inspection` collection. You can now navigate to the [Annotation Tool](http://localhost/annotation.html) and draw bounding boxes.
+
 ## Optional
 
 I prefer to use `dnsmasq` for local development because it allows me to use wildcard routing with my nginx service. Plus it avoids any CORS issues.
