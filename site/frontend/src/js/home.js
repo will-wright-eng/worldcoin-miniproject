@@ -42,7 +42,6 @@ async function fetchData(url, options = {}) {
         const response = await fetch(url, options);
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
-        // console.log(data);
         return data;
     } catch (error) {
         console.error("Fetch error:", error);
@@ -66,11 +65,9 @@ async function loadMongoDBInfo() {
         document.getElementById('databaseName').textContent = info.database;
         document.getElementById('collections').textContent = info.collections.join(', ');
 
-        // Create a table element
         const table = document.createElement('table');
         table.setAttribute('id', 'collectionsTable');
 
-        // Create table header
         const thead = document.createElement('thead');
         const headerRow = document.createElement('tr');
         const collectionHeader = document.createElement('th');
@@ -82,10 +79,8 @@ async function loadMongoDBInfo() {
         thead.appendChild(headerRow);
         table.appendChild(thead);
 
-        // Create table body
         const tbody = document.createElement('tbody');
 
-        // Iterate over collections to fetch and display counts
         for (const collectionName of info.collections) {
             const count = await fetchCollectionCount(collectionName);
             const row = document.createElement('tr');
@@ -100,8 +95,7 @@ async function loadMongoDBInfo() {
 
         table.appendChild(tbody);
 
-        // Append the table to a container in your HTML, assuming an element with id 'collectionsContainer' exists
-        document.getElementById('collectionsContainer').innerHTML = ''; // Clear existing content
+        document.getElementById('collectionsContainer').innerHTML = '';
         document.getElementById('collectionsContainer').appendChild(table);
     }
 }

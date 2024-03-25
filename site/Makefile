@@ -13,12 +13,6 @@ help: ## list make commands
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 #* Docker
-# up: ## start prod docker-compose yml files
-# 	sudo docker compose -f docker-compose.prod.yml up --build --remove-orphans
-
-# upd: ## start prod docker-compose yml files
-# 	sudo docker compose -f docker-compose.prod.yml up --build --remove-orphans -d
-
 local: ## start site locally, uses override yml
 	docker-compose -f docker-compose.yml up --build --remove-orphans
 
@@ -30,11 +24,6 @@ logs: ## dc logs
 
 docker-kill: ## kill all docker containers
 	for id in $$(docker ps --format "{{.ID}}"); do docker kill $$id; done
-
-# deploy: cleanup deploy-prod ## clean, build, and rsync public files
-
-# deploy-prod: ## build hugo app and rsync files
-# 	@bash "${REPO_ROOT}/scripts/deploy.sh"
 
 #* Open
 open: ## open browser to app and docs

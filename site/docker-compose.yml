@@ -14,8 +14,6 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT} --reload
     depends_on:
     - mongo
-    # networks:
-    # - app-network
 
   mongo:
     image: mongo:latest
@@ -39,10 +37,6 @@ services:
     depends_on:
     - frontend
     - backend
-
-# networks:
-#   app-network:
-#     driver: bridge
 
 volumes:
   mongo-data:

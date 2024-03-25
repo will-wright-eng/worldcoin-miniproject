@@ -20,7 +20,7 @@ The following software is required to run this project locally:
 
 ## Usage
 
-To start the project, run the following commands:
+To start the project, rename `.env.example` to `.env` and update the values to match your local setup (ie `nginx.conf`). Then run the following commands:
 
 ```bash
 # Open the frontend & backend UIs in the default browser
@@ -66,3 +66,4 @@ You can implement this within the `.env` file -- you'll see my domain name mask 
 - backend
   - add unit testing
   - add integration testing
+  - load testing
