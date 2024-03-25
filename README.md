@@ -63,6 +63,7 @@ You can implement this within the `.env` file -- you'll see my domain name mask 
 - frontend
   - dashboard
     - real-time updates (server-side events)
+    - add interface for populating database and model_failure_inspection collection
   - annotation tool
     - save canvas
     - load annotated image
