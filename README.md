@@ -23,6 +23,7 @@ The following software is required to run this project locally:
 To start the project, rename `.env.example` to `.env` and update the values to match your local setup (ie `nginx.conf`). Then run the following commands:
 
 ```bash
+cd site
 # Open the frontend & backend UIs in the default browser
 make open
 # Run the project locally
