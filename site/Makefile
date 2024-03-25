@@ -46,10 +46,4 @@ ipynbcheckpoints-remove: ## cleanup subcommand - ipynbcheckpoints-remove
 pytestcache-remove: ## cleanup subcommand - pytestcache-remove
 	find . | grep -E ".pytest_cache" | xargs rm -rf
 
-shell:
-	docker exec -it [CONTAINER_ID] /bin/bash
-
-test:
-	docker exec -it [CONTAINER_ID] pytest
-
 cleanup: pycache-remove dsstore-remove mypycache-remove ipynbcheckpoints-remove pytestcache-remove
