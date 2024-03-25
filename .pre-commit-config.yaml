@@ -15,7 +15,6 @@ repos:
   - id: trailing-whitespace
   - id: check-toml
   - id: check-ast
-  # - id: check-added-large-files
 - repo: https://github.com/asottile/add-trailing-comma
   rev: v3.1.0
   hooks:
@@ -50,8 +49,6 @@ repos:
   rev: 5.13.2
   hooks:
   - id: isort
-    # args: [ "--settings-file", "pyproject.toml", "--order-by-type", "--length-sort", "--profile", "black", "--filter-files"]
-    # args: ["--settings-file", "pyproject.toml", "--filter-files"]
     args: ["--settings-file", ".isort.cfg", "--filter-files"]
     name: isort (python)
   - id: isort
