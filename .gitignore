@@ -1,6 +1,6 @@
 tmp/
 .DS_Store
-.env
+# .env
 .db
 node_modules
 .parcel-cache
